@@ -5311,6 +5311,15 @@ RValue CodeGenFunction::EmitCall(QualType CalleeType, const CGCallee &OrigCallee
                                   CalleeDecl);
   }
 
+  // indirect call (but not virtual call)
+  // move metadata instrumentation to separate compiler pass instead?
+  if (!TargetDecl || !isa<FunctionDecl>(TargetDecl)) {
+    llvm::LLVMContext &C = CallOrInvoke->getModule()->getContext();
+    llvm::ConstantAsMetadata *const1MD = llvm::ConstantAsMetadata::get(llvm::ConstantInt::get(llvm::Type::getInt32Ty(C), 1));
+    llvm::MDNode *one = llvm::MDNode::get(C, const1MD);
+    CallOrInvoke->setMetadata("is_icall", one);
+  }
+
   return Call;
 }
 

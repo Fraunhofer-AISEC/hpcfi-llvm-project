@@ -114,6 +114,7 @@ void TypeMapTy::addTypeMapping(Type *DstTy, Type *SrcTy) {
 /// Recursively walk this pair of types, returning true if they are isomorphic,
 /// false if they are not.
 bool TypeMapTy::areTypesIsomorphic(Type *DstTy, Type *SrcTy) {
+  return false; // disable isomorphic type merging
   // Two types with differing kinds are clearly not isomorphic.
   if (DstTy->getTypeID() != SrcTy->getTypeID())
     return false;
